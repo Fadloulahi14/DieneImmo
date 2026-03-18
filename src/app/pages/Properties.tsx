@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { MapPin, Maximize, Bed, Bath, Search, SlidersHorizontal, X, ArrowRight, Phone } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { allProperties, categories, zones } from '../data/properties';
+import { useProperties } from '../../lib/useProperties';
+import { categories, zones } from '../../lib/api';
 
 export function Properties() {
+  const { properties: allProperties, loading } = useProperties();
+  const [searchParams] = useSearchParams();
+  const urlType = searchParams.get('type');
   const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState<'Tous' | 'Vente' | 'Location'>('Tous');
+  const [typeFilter, setTypeFilter] = useState<'Tous' | 'Vente' | 'Location'>(
+    urlType === 'Vente' || urlType === 'Location' ? urlType : 'Tous'
+  );
   const [categoryFilter, setCategoryFilter] = useState('Tous');
   const [zoneFilter, setZoneFilter] = useState('Toutes');
   const [showFilters, setShowFilters] = useState(false);
@@ -187,21 +193,31 @@ export function Properties() {
             )}
           </div>
 
-          {filtered.length === 0 ? (
+          {filtered.length === 0 || loading ? (
             <div className="text-center py-20">
-              <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
-                <Search size={32} className="text-gray-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-700 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Aucun bien trouvé</h3>
-              <p className="text-gray-500 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>Essayez de modifier vos critères de recherche.</p>
-              <button
-                onClick={clearFilters}
-                className="inline-flex items-center gap-2 bg-[#D30000] hover:bg-[#b00000] text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-md"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                <X size={16} />
-                Réinitialiser les filtres
-              </button>
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="animate-pulse bg-gray-200 rounded-2xl h-96" />
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
+                    <Search size={32} className="text-gray-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-700 mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Aucun bien trouvé</h3>
+                  <p className="text-gray-500 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>Essayez de modifier vos critères de recherche.</p>
+                  <button
+                    onClick={clearFilters}
+                    className="inline-flex items-center gap-2 bg-[#D30000] hover:bg-[#b00000] text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-md"
+                    style={{ fontFamily: 'Poppins, sans-serif' }}
+                  >
+                    <X size={16} />
+                    Réinitialiser les filtres
+                  </button>
+                </>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

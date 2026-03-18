@@ -30,6 +30,7 @@ const services = [
       'Suivi après emménagement',
     ],
     cta: 'Trouver une location',
+    link: '/biens?type=Location',
   },
   {
     icon: Home,
@@ -45,6 +46,7 @@ const services = [
       'Accompagnement jusqu\'à la signature',
     ],
     cta: 'Vendre mon bien',
+    link: '/contact',
   },
   {
     icon: TrendingUp,
@@ -60,6 +62,7 @@ const services = [
       'Assistance au financement',
     ],
     cta: 'Acheter un bien',
+    link: '/biens?type=Vente',
   },
   {
     icon: ShieldCheck,
@@ -75,6 +78,7 @@ const services = [
       'Reporting mensuel détaillé',
     ],
     cta: 'Confier mon bien',
+    link: '/contact',
   },
   {
     icon: Lightbulb,
@@ -90,6 +94,7 @@ const services = [
       'Accompagnement en défiscalisation',
     ],
     cta: 'Demander un conseil',
+    link: '/contact',
   },
 ];
 
@@ -168,7 +173,7 @@ export function Services() {
                       ))}
                     </ul>
                     <Link
-                      to="/contact"
+                      to={service.link}
                       className="inline-flex items-center gap-2 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
                       style={{ backgroundColor: service.color, fontFamily: 'Poppins, sans-serif' }}
                     >

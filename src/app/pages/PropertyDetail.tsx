@@ -7,18 +7,29 @@ import {
   ChevronLeft, ChevronRight, ZoomIn, Tag, Clock, MessageCircle
 } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { allProperties } from '../data/properties';
+import { useProperty, useProperties } from '../../lib/useProperties';
 
 export function PropertyDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const property = allProperties.find(p => p.id === Number(id));
-
+  const { property, loading } = useProperty(Number(id));
+  const { properties: allProperties } = useProperties();
   const [activeImg, setActiveImg] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [liked, setLiked] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-20 h-20 bg-gray-200 rounded-full mb-4" />
+          <div className="h-6 w-32 bg-gray-200 rounded" />
+        </div>
+      </div>
+    );
+  }
 
   if (!property) {
     return (
@@ -46,6 +57,10 @@ export function PropertyDetail() {
     );
   }
 
+  const similarProperties = (allProperties || [])
+    .filter(p => p.id !== property.id && (p.type === property.type || p.category === property.category))
+    .slice(0, 3);
+
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
     setLightboxOpen(true);
@@ -53,10 +68,6 @@ export function PropertyDetail() {
 
   const prevLightbox = () => setLightboxIndex((i) => (i - 1 + property.images.length) % property.images.length);
   const nextLightbox = () => setLightboxIndex((i) => (i + 1) % property.images.length);
-
-  const similarProperties = allProperties
-    .filter(p => p.id !== property.id && (p.type === property.type || p.category === property.category))
-    .slice(0, 3);
 
   const descLines = property.descriptionFull.split('\n\n');
   const shortDesc = descLines.slice(0, 2).join('\n\n');
@@ -484,14 +495,16 @@ export function PropertyDetail() {
 
                   {/* CTA buttons */}
                   <div className="px-6 pb-6 space-y-3">
-                    <Link
-                      to="/contact"
+                    <a
+                      href={`https://wa.me/221771234567?text=${encodeURIComponent(`*DEMANDE DE VISITE*%0A%0ABonjour, je souhaite visiter ce bien :%0A%0A*Référence:* DI-${property.id.toString().padStart(4,'0')}%0A*Titre:* ${property.title}%0A*Type:* ${property.type}%0A*Prix:* ${property.priceLabel}%0A*Localisation:* ${property.location}%0A*Surface:* ${property.surfaceLabel}%0A*Chambres:* ${property.bedrooms}%0A*Salles de bain:* ${property.bathrooms}%0A%0AVeuillez me contacter pour planifier une visite.%0A%0AMerci`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 w-full bg-[#D30000] hover:bg-[#b00000] text-white px-6 py-3.5 rounded-xl font-bold transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                       style={{ fontFamily: 'Poppins, sans-serif' }}
                     >
                       <Phone size={17} />
                       Demander une visite
-                    </Link>
+                    </a>
                     <a
                       href={`https://wa.me/221771234567?text=${encodeURIComponent(`Bonjour, je suis intéressé par le bien : ${property.title} (réf. DI-${property.id.toString().padStart(4,'0')}). Pouvez-vous me donner plus d'informations ?`)}`}
                       target="_blank"

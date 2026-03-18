@@ -44,20 +44,11 @@ export function Navbar() {
         <div className="flex items-center justify-between h-18 py-3">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-lg bg-[#D30000] flex items-center justify-center flex-shrink-0 shadow-md group-hover:bg-[#0273A7] transition-colors duration-300">
-              <Home size={20} className="text-white" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className={`text-xl font-bold tracking-tight transition-colors duration-300 ${logoColor}`}
-                style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Diene
-                <span className={`transition-colors duration-300 ${scrolled || !isHome ? 'text-[#0273A7]' : 'text-white/80'}`}> Immo</span>
-              </span>
-              <span className={`text-[10px] tracking-widest uppercase transition-colors duration-300 ${logoSubColor}`}
-                style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Agence Immobilière
-              </span>
-            </div>
+            <img 
+              src="/images/logorouge.png" 
+              alt="Diene Immo" 
+              className="h-12 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Nav */}

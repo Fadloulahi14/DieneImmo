@@ -1,44 +1,149 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { motion } from 'motion/react';
-import { ArrowLeft, Save, Image as ImageIcon, CheckSquare } from 'lucide-react';
-import { allProperties, categories, zones } from '../../data/properties';
+import { ArrowLeft, Save, Image as ImageIcon, CheckSquare, Upload, X } from 'lucide-react';
+import { useProperty } from '../../../lib/useProperties';
+import { createProperty, updateProperty, categories, zones } from '../../../lib/api';
+import { uploadToImgBB } from '../../../lib/imgbb';
 import { AdminLayout } from '../../components/AdminLayout';
 
 export function PropertyForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEdit = !!id;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const existingProperty = isEdit ? allProperties.find((p) => p.id === Number(id)) : null;
+  const { property: existingProperty, loading } = useProperty(Number(id));
 
   const [formData, setFormData] = useState({
-    title: existingProperty?.title || '',
-    type: (existingProperty?.type || 'Vente') as 'Vente' | 'Location',
-    category: existingProperty?.category || 'Appartement',
-    price: existingProperty?.price || 0,
-    location: existingProperty?.location || '',
-    zone: existingProperty?.zone || 'Almadies',
-    surface: existingProperty?.surface || 0,
-    bedrooms: existingProperty?.bedrooms || 0,
-    bathrooms: existingProperty?.bathrooms || 1,
-    description: existingProperty?.description || '',
-    badge: existingProperty?.badge || '',
-    featured: existingProperty?.featured || false,
-    yearBuilt: existingProperty?.yearBuilt || new Date().getFullYear(),
-    parking: existingProperty?.parking || 0,
-    floor: existingProperty?.floor ?? '',
-    availableFrom: existingProperty?.availableFrom || 'Immédiat',
+    title: '',
+    type: 'Vente' as 'Vente' | 'Location',
+    category: 'Appartement',
+    price: 0,
+    location: '',
+    zone: 'Almadies',
+    surface: 0,
+    bedrooms: 0,
+    bathrooms: 1,
+    description: '',
+    badge: '',
+    featured: false,
+    yearBuilt: new Date().getFullYear(),
+    parking: 0,
+    floor: '' as string | number,
+    availableFrom: 'Immédiat',
+    images: [] as string[],
+    img: '',
   });
 
-  const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    if (existingProperty) {
+      setFormData({
+        title: existingProperty.title,
+        type: existingProperty.type,
+        category: existingProperty.category,
+        price: existingProperty.price,
+        location: existingProperty.location,
+        zone: existingProperty.zone,
+        surface: existingProperty.surface,
+        bedrooms: existingProperty.bedrooms,
+        bathrooms: existingProperty.bathrooms,
+        description: existingProperty.description,
+        badge: existingProperty.badge || '',
+        featured: existingProperty.featured,
+        yearBuilt: existingProperty.yearBuilt || new Date().getFullYear(),
+        parking: existingProperty.parking || 0,
+        floor: existingProperty.floor ?? '',
+        availableFrom: existingProperty.availableFrom || 'Immédiat',
+        images: existingProperty.images || [],
+        img: existingProperty.img || '',
+      });
+    }
+  }, [existingProperty]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [saved, setSaved] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // Handle image selection - upload to ImgBB
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    const fileArray = Array.from(files);
+    const newImageUrls: string[] = [];
+
+    try {
+      for (const file of fileArray) {
+        if (file.type.startsWith('image/')) {
+          // Upload to ImgBB
+          const url = await uploadToImgBB(file);
+          newImageUrls.push(url);
+        }
+      }
+
+      setFormData(prev => {
+        const updatedImages = [...prev.images, ...newImageUrls];
+        return {
+          ...prev,
+          images: updatedImages,
+          img: prev.img || newImageUrls[0]
+        };
+      });
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      alert('Erreur lors du téléchargement des images. Veuillez réessayer.');
+    } finally {
+      setUploading(false);
+    }
+    
+    // Reset input
+    e.target.value = '';
+  };
+
+  // Remove image
+  const removeImage = (index: number) => {
+    setFormData(prev => {
+      const newImages = [...prev.images];
+      newImages.splice(index, 1);
+      return {
+        ...prev,
+        images: newImages,
+        img: newImages.length > 0 ? newImages[0] : ''
+      };
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => {
-      navigate('/admin/properties');
-    }, 1200);
+    const propertyData = {
+      ...formData,
+      priceLabel: `${formData.price}FCFA${formData.type === 'Location' ? '/mois' : ''}`,
+      surfaceLabel: `${formData.surface} m²`,
+      img: formData.images.length > 0 ? formData.images[0] : '',
+      descriptionFull: formData.description,
+      features: [],
+      floor: formData.floor ? Number(formData.floor) : undefined,
+    };
+
+    try {
+      setSaving(true);
+      if (isEdit) {
+        await updateProperty(Number(id), propertyData);
+      } else {
+        await createProperty(propertyData as any);
+      }
+      setSaved(true);
+      setTimeout(() => {
+        navigate('/admin/properties');
+      }, 1200);
+    } catch (error) {
+      console.error('Error saving property:', error);
+      alert('Erreur lors de la sauvegarde du bien');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleChange = (
@@ -65,10 +170,18 @@ export function PropertyForm() {
   return (
     <AdminLayout
       title={isEdit ? 'Modifier le bien' : 'Nouveau bien'}
-      subtitle={isEdit ? `Modification de : ${existingProperty?.title}` : 'Ajoutez un nouveau bien immobilier'}
+      subtitle={isEdit && existingProperty ? `Modification de : ${existingProperty.title}` : 'Ajoutez un nouveau bien immobilier'}
       actions={headerActions}
     >
-      <form onSubmit={handleSubmit} className="max-w-4xl">
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="w-12 h-12 bg-gray-200 rounded-full mb-4" />
+            <div className="h-4 w-32 bg-gray-200 rounded" />
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
         {saved && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -87,17 +200,76 @@ export function PropertyForm() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
               Images du bien
             </h2>
-            <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-[#D30000] transition-colors cursor-pointer group">
+            
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageSelect}
+              className="hidden"
+            />
+
+            {/* Upload area */}
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-[#D30000] transition-colors cursor-pointer group"
+            >
               <div className="w-12 h-12 rounded-full bg-gray-100 group-hover:bg-[#D30000]/10 flex items-center justify-center mx-auto mb-3 transition-colors">
-                <ImageIcon size={22} className="text-gray-400 group-hover:text-[#D30000] transition-colors" />
+                <Upload size={22} className="text-gray-400 group-hover:text-[#D30000] transition-colors" />
               </div>
               <p className="text-sm font-medium text-gray-600 mb-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 Cliquez pour télécharger ou glissez-déposez
               </p>
               <p className="text-xs text-gray-400" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                PNG, JPG jusqu'à 10 MB · Max 5 images
+                PNG, JPG jusqu'à 10 MB
               </p>
             </div>
+
+            {/* Loading indicator */}
+            {uploading && (
+              <div className="mt-4 text-center text-sm text-[#D30000]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-[#D30000] border-t-transparent rounded-full animate-spin" />
+                  Téléchargement vers ImgBB...
+                </div>
+              </div>
+            )}
+
+            {/* Image preview */}
+            {formData.images.length > 0 && (
+              <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {formData.images.map((img, index) => (
+                  <div key={index} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100">
+                    <img src={img} alt={`Image ${index + 1}`} className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X size={14} />
+                    </button>
+                    {index === 0 && (
+                      <span className="absolute bottom-1 left-1 bg-[#D30000] text-white text-xs px-2 py-0.5 rounded">
+                        Principale
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {formData.images.length > 0 && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="mt-3 text-sm text-[#D30000] hover:underline"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                + Ajouter plus d'images
+              </button>
+            )}
           </div>
 
           {/* Informations principales */}
@@ -342,16 +514,26 @@ export function PropertyForm() {
             </button>
             <button
               type="submit"
-              disabled={saved}
+              disabled={saved || saving}
               className="flex items-center gap-2 bg-[#D30000] hover:bg-[#b00000] disabled:opacity-60 text-white px-8 py-3 rounded-xl font-semibold transition-colors shadow-md hover:shadow-lg"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              <Save size={18} />
-              {isEdit ? 'Mettre à jour' : 'Créer le bien'}
+              {saving ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Enregistrement...
+                </>
+              ) : (
+                <>
+                  <Save size={18} />
+                  {isEdit ? 'Mettre à jour' : 'Créer le bien'}
+                </>
+              )}
             </button>
           </div>
         </div>
       </form>
+      )}
     </AdminLayout>
   );
 }

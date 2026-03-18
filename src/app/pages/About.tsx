@@ -6,11 +6,9 @@ import {
 } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
-const manImg = 'https://images.unsplash.com/photo-1629507208649-70919ca33793?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBidXNpbmVzcyUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MjM0OTIwNnww&ixlib=rb-4.1.0&q=80&w=400';
-const womanImg = 'https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB3b21hbiUyMGJ1c2luZXNzJTIwcG9ydHJhaXQlMjBzbWlsZXxlbnwxfHx8fDE3NzIzNzYyNzR8MA&ixlib=rb-4.1.0&q=80&w=400';
-const man2Img = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjBtYW4lMjBidXNpbmVzcyUyMHBvcnRyYWl0fGVufDF8fHx8MTc3MjM0OTIwNnww&ixlib=rb-4.1.0&q=80&w=400';
-const woman2Img = 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxwcm9mZXNzaW9uYWwlMjB3b21hbiUyMGJ1c2luZXNzJTIwcG9ydHJhaXQlMjBzbWlsZXxlbnwxfHx8fDE3NzIzNzYyNzR8MA&ixlib=rb-4.1.0&q=80&w=400';
-const officeImg = 'https://images.unsplash.com/photo-1758630737361-ca7532fb5e7f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFsJTIwZXN0YXRlJTIwYWdlbmN5JTIwb2ZmaWNlJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc3MjM3NjI3Mnww&ixlib=rb-4.1.0&q=80&w=800';
+const manImg = '/images/immo2.jpeg';
+const womanImg = '/images/immo1.jpeg';
+const officeImg = '/images/immo3.jpeg';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -33,35 +31,23 @@ const values = [
 
 const team = [
   {
-    name: 'Mamadou Diene',
+    name: 'Elhadji Diene',
     role: 'Directeur Général et Fondateur',
     img: manImg,
-    bio: 'Avec plus de 15 ans d\'expérience dans l\'immobilier dakarois, Mamadou a fondé Diene Immo avec la vision de rendre le marché immobilier accessible et transparent.',
+    bio: 'Fondateur de DIÈNE IMMOBILIER, courtier chevronné reconnu dans le milieu immobilier sénégalais avec plus de 10 ans d\'expérience.',
   },
   {
-    name: 'Fatou Diallo',
-    role: 'Directrice Commerciale',
+    name: 'Ndeye Saly & Thierno',
+    role: 'Comptable et Commerciale / Courtier collaborateur',
     img: womanImg,
-    bio: 'Experte en négociation et en conseil client, Fatou apporte son excellence et sa passion pour l\'immobilier au service de chaque projet.',
-  },
-  {
-    name: 'Ibrahima Ndiaye',
-    role: 'Conseiller Immobilier Senior',
-    img: man2Img,
-    bio: 'Spécialiste des transactions immobilières haut de gamme, Ibrahima accompagne une clientèle premium avec discrétion et professionnalisme.',
-  },
-  {
-    name: 'Aïssatou Sall',
-    role: 'Gestionnaire de Patrimoine',
-    img: woman2Img,
-    bio: 'Aïssatou gère le patrimoine immobilier de nos clients propriétaires avec rigueur, optimisant la rentabilité et la valorisation des biens.',
-  },
+    bio: 'Experte en gestion comptable et commerciale, elle accompagne nos clients avec rigueur et professionnalisme.',
+  }
 ];
 
 const milestones = [
-  { year: '2013', title: 'Création de Diene Immo', desc: 'Fondation de l\'agence à Fann Hock, Dakar, avec une équipe de 3 personnes.' },
-  { year: '2016', title: 'Expansion du réseau', desc: 'Développement d\'un réseau de partenaires couvrant tous les quartiers de Dakar.' },
-  { year: '2019', title: '500ème transaction', desc: 'Diene Immo célèbre sa 500ème transaction immobilière réussie.' },
+  { year: '2010', title: 'Création de DIÈNE IMMOBILIER', desc: 'Fondation de l\'agence par Monsieur Elhadji Diene, courtier reconnu dans le milieu immobilier sénégalais.' },
+  { year: '2015', title: 'Expansion du réseau', desc: 'Développement d\'un réseau de partenaires couvrant tous les quartiers de Dakar.' },
+  { year: '2018', title: '500ème transaction', desc: 'DIÈNE IMMOBILIER célèbre sa 500ème transaction immobilière réussie.' },
   { year: '2022', title: 'Certification nationale', desc: 'Obtention de la certification d\'excellence des agences immobilières du Sénégal.' },
   { year: '2024', title: '1200+ clients satisfaits', desc: 'Plus de 1200 familles et investisseurs ont fait confiance à notre expertise.' },
 ];
@@ -86,7 +72,7 @@ export function About() {
               À <span className="text-[#D30000] italic">propos</span> de nous
             </h1>
             <p className="text-gray-300 text-lg max-w-2xl mx-auto" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Diene Immo, c'est plus de 10 ans d'expertise au service de votre patrimoine immobilier à Dakar.
+              DIÈNE IMMOBILIER, c'est plus de 10 ans d'expertise au service de votre patrimoine immobilier à Dakar.
             </p>
           </motion.div>
         </div>
@@ -108,20 +94,46 @@ export function About() {
                 </span>
               </div>
               <h2 className="text-4xl lg:text-5xl text-gray-900 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Une décennie au service{' '}
-                <span className="text-[#0273A7]">de l'immobilier</span>
+                DIÈNE <span className="text-[#0273A7]">IMMOBILIER</span>
               </h2>
               <p className="text-gray-600 leading-relaxed mb-5" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Fondée en 2013 par Mamadou Diene à Fann Hock, Dakar, notre agence est née d'une conviction simple : chaque Sénégalais mérite un accompagnement de qualité dans son projet immobilier.
+                DIÈNE IMMOBILIER, anciennement D.I.S, est une agence immobilière fondée dans les années 2010 par Monsieur Elhadji Diene, un courtier chevronné reconnu dans le milieu immobilier sénégalais.
               </p>
               <p className="text-gray-600 leading-relaxed mb-5" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Depuis nos débuts, nous avons construit une réputation solide basée sur la confiance, le professionnalisme et l'écoute de nos clients. Notre profonde connaissance du marché dakarois nous permet d'identifier les meilleures opportunités et de vous conseiller avec précision.
+                Grâce à son expérience de terrain, son sens du relationnel et sa grande disponibilité, Mr Elhadji Diene s'est imposé au fil des années comme un acteur respecté et très appréciée par ses clients. Sa sympathie, sa rigueur et son professionnalisme lui ont permis de bâtir une solide réputation dans le secteur.
               </p>
               <p className="text-gray-600 leading-relaxed mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Aujourd'hui, Diene Immo est fière d'avoir accompagné plus de 1 200 clients dans leurs projets immobiliers, des premières acquisitions aux investissements les plus ambitieux.
+                Depuis sa création, DIÈNE IMMOBILIER accompagne particuliers et investisseurs dans leurs projets immobiliers avec sérieux et transparence. L'agence intervene dans plusieurs domaines :
               </p>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 size={20} className="text-[#D30000]" />
+                  <span className="text-gray-700" style={{ fontFamily: 'Poppins, sans-serif' }}>Achat et vente de biens immobiliers</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 size={20} className="text-[#D30000]" />
+                  <span className="text-gray-700" style={{ fontFamily: 'Poppins, sans-serif' }}>Location d'appartements, maisons et locaux commerciaux</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 size={20} className="text-[#D30000]" />
+                  <span className="text-gray-700" style={{ fontFamily: 'Poppins, sans-serif' }}>Gestion immobilière</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 size={20} className="text-[#D30000]" />
+                  <span className="text-gray-700" style={{ fontFamily: 'Poppins, sans-serif' }}>Conseil et accompagnement immobilier</span>
+                </li>
+              </ul>
 
-              <div className="grid grid-cols-3 gap-6">
+              <div className="bg-gray-50 rounded-2xl p-6 border-l-4 border-[#D30000]">
+                <p className="text-gray-800 font-semibold italic" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  "À chacun son Toit"
+                </p>
+                <p className="text-gray-600 text-sm mt-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  Notre mission est simple : aider chacun à trouver le bien qui lui correspond, tout en garantissant sécurité, confiance et rentabilité.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-6 mt-8">
                 {[
                   { value: '10+', label: 'Années d\'expérience' },
                   { value: '500+', label: 'Biens vendus' },
@@ -171,13 +183,13 @@ export function About() {
               },
               {
                 icon: Eye,
-                title: 'Notre Vision',
+                title: 'Notre Devise',
                 color: '#0273A7',
-                desc: 'Devenir l\'agence immobilière de référence au Sénégal, reconnue pour son expertise, son intégrité et son engagement envers l\'excellence. Nous voulons contribuer au développement du marché immobilier dakarois en offrant des services innovants et de qualité.',
+                desc: '"À chacun son Toit" - Notre mission est simple : aider chacun à trouver le bien qui lui correspond, tout en garantissant sécurité, confiance et rentabilité.',
                 points: [
-                  'Leader de l\'immobilier à Dakar',
-                  'Innovation et digitalisation des services',
-                  'Contribution au développement urbain',
+                  'DIÈNE IMMOBILIER met son expertise à votre service',
+                  'Un réseau au service de votre patrimoine',
+                  'Garantie de confiance et de transparence',
                 ],
               },
             ].map(({ icon: Icon, title, color, desc, points }, i) => (
@@ -272,7 +284,7 @@ export function About() {
               </span>
             </div>
             <h2 className="text-4xl lg:text-5xl text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Notre <span className="text-[#0273A7]">expertise</span>
+              Notre <span className="text-[#0273A7]">parcours</span>
             </h2>
           </motion.div>
 
@@ -341,7 +353,7 @@ export function About() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {team.map((member, i) => (
               <motion.div
@@ -380,7 +392,7 @@ export function About() {
         <div className="relative z-10 max-w-3xl mx-auto px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-4xl text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Rejoignez la famille Diene Immo
+              Rejoignez la famille DIÈNE IMMOBILIER
             </h2>
             <p className="text-white/85 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
               Confiez-nous votre projet immobilier et bénéficiez de l'expertise de notre équipe dédiée.

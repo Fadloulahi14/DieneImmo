@@ -4,13 +4,14 @@ import {
   Home, MessageSquare, TrendingUp, Eye, Plus,
   BarChart3, Calendar, DollarSign
 } from 'lucide-react';
-import { allProperties } from '../../data/properties';
+import { useProperties } from '../../../lib/useProperties';
 import { AdminLayout } from '../../components/AdminLayout';
 
 export function AdminDashboard() {
   const navigate = useNavigate();
+  const { properties: allProperties, loading } = useProperties();
 
-  const stats = [
+  const stats = loading ? [] : [
     {
       label: 'Total Biens',
       value: allProperties.length.toString(),
@@ -63,7 +64,7 @@ export function AdminDashboard() {
     { type: 'Demande', title: 'Contact reçu pour Bureau Commercial', time: 'Il y a 1j', color: '#D30000' },
   ];
 
-  const topProperties = allProperties.slice(0, 5);
+  const topProperties = loading ? [] : allProperties.slice(0, 5);
 
   const headerActions = (
     <button

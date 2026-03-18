@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { motion } from 'motion/react';
-import { Home, BarChart3, Building2, LogOut, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, BarChart3, Building2, PlusCircle, LogOut, ExternalLink, Menu, X } from 'lucide-react';
 
 const navItems = [
   { icon: BarChart3, label: 'Tableau de bord', path: '/admin/dashboard' },
   { icon: Building2, label: 'Biens immobiliers', path: '/admin/properties' },
+  { icon: PlusCircle, label: 'Ajouter un bien', path: '/admin/properties/new' },
 ];
 
 interface AdminLayoutProps {
@@ -19,22 +19,14 @@ interface AdminLayoutProps {
 export function AdminLayout({ children, title, subtitle, actions, headerExtra }: AdminLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(() => {
-    const saved = localStorage.getItem('adminSidebarOpen');
-    return saved !== null ? saved === 'true' : true;
-  });
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('adminAuth') !== 'true') {
       navigate('/admin/login');
     }
   }, [navigate]);
-
-  const handleToggle = () => {
-    const next = !sidebarOpen;
-    setSidebarOpen(next);
-    localStorage.setItem('adminSidebarOpen', String(next));
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('adminAuth');
@@ -49,97 +41,127 @@ export function AdminLayout({ children, title, subtitle, actions, headerExtra }:
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex overflow-hidden">
-      {/* Sidebar */}
-      <motion.aside
-        initial={false}
-        animate={{ width: sidebarOpen ? 256 : 72 }}
-        transition={{ duration: 0.25, ease: 'easeInOut' }}
-        className="bg-gradient-to-b from-gray-900 to-gray-800 text-white flex-shrink-0 flex flex-col overflow-hidden"
-        style={{ minHeight: '100vh', height: '100%', position: 'relative' }}
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Mobile overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Simple fixed position */}
+      <aside
+        className={`
+          fixed lg:sticky top-0 left-0 z-50 h-screen
+          w-[260px] bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 
+          text-white flex flex-col 
+          shadow-2xl overflow-hidden
+          ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
       >
         {/* Logo */}
-        <div className="p-4 border-b border-white/10 flex items-center gap-3 min-h-[72px]">
-          <div className="w-9 h-9 rounded-lg bg-[#D30000] flex items-center justify-center flex-shrink-0 shadow-md">
-            <Home size={17} className="text-white" />
+        <div className="p-4 border-b border-white/10 flex items-center gap-3 h-[72px] flex-shrink-0">
+          <img 
+            src="/images/logorouge.png" 
+            alt="Diene Immo" 
+            className="h-10 w-auto object-contain"
+          />
+          <div className="flex flex-col leading-none overflow-hidden">
+            <span
+              className="text-white font-bold text-lg truncate"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              Diene <span className="text-[#D30000]">Immo</span>
+            </span>
+            <span className="text-gray-400 text-[10px] uppercase tracking-widest" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Administration
+            </span>
           </div>
-          {sidebarOpen && (
-            <div className="flex flex-col leading-none overflow-hidden">
-              <span
-                className="text-white font-bold truncate"
-                style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1rem' }}
-              >
-                Diene <span className="text-[#0273A7]">Immo</span>
-              </span>
-              <span className="text-gray-400 text-[10px] uppercase tracking-widest" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Administration
-              </span>
-            </div>
-          )}
         </div>
 
+        {/* Close button (mobile) */}
+        <button 
+          onClick={() => setMobileMenuOpen(false)}
+          className="lg:hidden absolute top-4 right-4 p-1 rounded-lg hover:bg-white/10"
+        >
+          <X size={20} />
+        </button>
+
         {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-1 mt-2">
+        <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
             return (
               <button
                 key={item.path}
-                onClick={() => navigate(item.path)}
-                title={!sidebarOpen ? item.label : undefined}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                onClick={() => {
+                  navigate(item.path);
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
                   active
-                    ? 'bg-[#D30000] text-white shadow-lg shadow-red-900/30'
+                    ? 'bg-gradient-to-r from-[#D30000] to-[#b00000] text-white shadow-lg shadow-red-500/20'
                     : 'text-gray-400 hover:bg-white/10 hover:text-white'
                 }`}
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                <Icon size={20} className="flex-shrink-0" />
-                {sidebarOpen && (
-                  <span className="text-sm font-medium truncate">{item.label}</span>
-                )}
+                <Icon size={20} className={`flex-shrink-0 transition-transform ${!active && 'group-hover:scale-110'}`} />
+                <span className="text-sm font-medium truncate">{item.label}</span>
               </button>
             );
           })}
         </nav>
 
+        {/* Stats */}
+        <div className="px-4 py-3 mx-3 mb-3 rounded-xl bg-gradient-to-r from-slate-800 to-slate-700 border border-white/5 flex-shrink-0">
+          <div className="text-xs text-gray-400 mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>Statut du système</div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-sm text-green-400 font-medium" style={{ fontFamily: 'Poppins, sans-serif' }}>Connecté</span>
+          </div>
+        </div>
+
         {/* Footer */}
-        <div className="p-3 border-t border-white/10 space-y-1">
+        <div className="p-3 border-t border-white/10 space-y-1 flex-shrink-0">
           <button
             onClick={() => window.open('/', '_blank')}
-            title={!sidebarOpen ? 'Voir le site' : undefined}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-all"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
             <ExternalLink size={20} className="flex-shrink-0" />
-            {sidebarOpen && <span className="text-sm">Voir le site</span>}
+            <span className="text-sm">Voir le site</span>
           </button>
           <button
             onClick={handleLogout}
-            title={!sidebarOpen ? 'Déconnexion' : undefined}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-red-500/20 hover:text-red-400 transition-all"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
             <LogOut size={20} className="flex-shrink-0" />
-            {sidebarOpen && <span className="text-sm">Déconnexion</span>}
+            <span className="text-sm">Déconnexion</span>
           </button>
         </div>
-
-        {/* Toggle button */}
-        <button
-          onClick={handleToggle}
-          className="absolute -right-3 top-[68px] w-6 h-6 bg-gray-700 hover:bg-[#D30000] border border-white/10 rounded-full flex items-center justify-center text-white transition-colors shadow-md z-10"
-          title={sidebarOpen ? 'Réduire' : 'Agrandir'}
-        >
-          {sidebarOpen ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
-        </button>
-      </motion.aside>
+      </aside>
 
       {/* Main area */}
-      <div className="flex-1 overflow-auto min-w-0">
-        {/* Sticky page header */}
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="flex-1 min-w-0 lg:ml-0">
+        {/* Mobile header */}
+        <header className="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-10 px-4 py-3 flex items-center justify-between">
+          <button 
+            onClick={() => setMobileMenuOpen(true)}
+            className="p-2 rounded-lg hover:bg-gray-100"
+          >
+            <Menu size={24} className="text-gray-700" />
+          </button>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>Diene Immo</span>
+          </div>
+          <div className="w-10" />
+        </header>
+
+        {/* Desktop sticky page header */}
+        <header className="hidden lg:block bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="px-6 py-4 flex items-center justify-between gap-4">
             <div className="min-w-0">
               <h1
@@ -163,8 +185,20 @@ export function AdminLayout({ children, title, subtitle, actions, headerExtra }:
           )}
         </header>
 
+        {/* Mobile title */}
+        <div className="lg:hidden px-4 py-4">
+          <h1 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="text-sm text-gray-500 mt-0.5" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              {subtitle}
+            </p>
+          )}
+        </div>
+
         {/* Page content */}
-        <main className="p-6">
+        <main className="p-4 lg:p-6">
           {children}
         </main>
       </div>

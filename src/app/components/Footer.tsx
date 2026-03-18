@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { Home, MapPin, Phone, Mail, Facebook, Instagram } from 'lucide-react';
+import { MapPin, Phone, Mail, Facebook, Instagram } from 'lucide-react';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -12,17 +12,11 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-[#D30000] flex items-center justify-center shadow-md">
-                <Home size={20} className="text-white" />
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-xl font-bold text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Diene <span className="text-[#0273A7]">Immo</span>
-                </span>
-                <span className="text-[10px] text-gray-400 tracking-widest uppercase" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Agence Immobilière
-                </span>
-              </div>
+              <img 
+                src="/images/logorouge.png" 
+                alt="DIÈNE IMMOBILIER" 
+                className="h-16 w-auto object-contain"
+              />
             </Link>
             <p className="text-gray-400 text-sm leading-relaxed mb-5" style={{ fontFamily: 'Poppins, sans-serif' }}>
               « À chacun son toit »
@@ -147,7 +141,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <p className="text-gray-500 text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Conçu avec ❤️ pour l'excellence immobilière
+              developper par Fadloullahi:778012731
             </p>
             <span className="text-gray-700">•</span>
             <Link

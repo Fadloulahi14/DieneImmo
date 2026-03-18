@@ -6,7 +6,7 @@ import {
   CheckCircle2, Users, Award, Clock
 } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { allProperties } from '../data/properties';
+import { useFeaturedProperties } from '../../lib/useProperties';
 
 const heroImage = 'https://images.unsplash.com/photo-1746458258536-b9ee5db20a73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtb2Rlcm4lMjBob3VzZSUyMGV4dGVyaW9yJTIwYXJjaGl0ZWN0dXJlfGVufDF8fHx8MTc3MjI5Mjc3N3ww&ixlib=rb-4.1.0&q=80&w=1080';
 
@@ -28,7 +28,7 @@ const services = [
 ];
 
 // Use real data from the centralized properties store
-const recentProperties = allProperties.filter(p => p.featured).slice(0, 3);
+
 
 const testimonials = [
   {
@@ -59,6 +59,8 @@ const stats = [
 ];
 
 export function Home() {
+  const { properties: recentProperties, loading } = useFeaturedProperties();
+
   return (
     <div className="bg-white">
       {/* ===== HERO ===== */}
@@ -345,67 +347,75 @@ export function Home() {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {recentProperties.map((prop) => (
-              <motion.div
-                key={prop.id}
-                variants={fadeUp}
-                className="group"
-              >
-                <Link
-                  to={`/biens/${prop.id}`}
-                  className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 h-full"
+            {loading ? (
+              <>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="animate-pulse bg-gray-200 rounded-2xl h-96" />
+                ))}
+              </>
+            ) : (
+              recentProperties.map((prop) => (
+                <motion.div
+                  key={prop.id}
+                  variants={fadeUp}
+                  className="group"
                 >
-                  <div className="relative overflow-hidden h-56 flex-shrink-0">
-                    <ImageWithFallback
-                      src={prop.img}
-                      alt={prop.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    <div className="absolute top-4 left-4 flex gap-2">
-                      <span
-                        className="text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
-                        style={{ backgroundColor: prop.type === 'Vente' ? '#D30000' : '#0273A7', fontFamily: 'Poppins, sans-serif' }}
-                      >
-                        {prop.type}
-                      </span>
-                      <span className="bg-white text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-md" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        {prop.badge}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-base font-bold text-gray-900 mb-2 group-hover:text-[#D30000] transition-colors leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>{prop.title}</h3>
-                    <div className="flex items-center gap-1.5 text-gray-500 text-xs mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      <MapPin size={13} className="text-[#D30000] flex-shrink-0" />
-                      <span>{prop.location}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-500 text-xs mb-4 flex-wrap" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      <div className="flex items-center gap-1 bg-gray-50 px-2.5 py-1 rounded-lg">
-                        <Maximize size={12} className="text-[#0273A7]" />
-                        <span className="font-medium">{prop.surfaceLabel}</span>
+                  <Link
+                    to={`/biens/${prop.id}`}
+                    className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 h-full"
+                  >
+                    <div className="relative overflow-hidden h-56 flex-shrink-0">
+                      <ImageWithFallback
+                        src={prop.img}
+                        alt={prop.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                      <div className="absolute top-4 left-4 flex gap-2">
+                        <span
+                          className="text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md"
+                          style={{ backgroundColor: prop.type === 'Vente' ? '#D30000' : '#0273A7', fontFamily: 'Poppins, sans-serif' }}
+                        >
+                          {prop.type}
+                        </span>
+                        <span className="bg-white text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-md" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                          {prop.badge}
+                        </span>
                       </div>
-                      {prop.bedrooms > 0 && (
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="text-base font-bold text-gray-900 mb-2 group-hover:text-[#D30000] transition-colors leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>{prop.title}</h3>
+                      <div className="flex items-center gap-1.5 text-gray-500 text-xs mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                        <MapPin size={13} className="text-[#D30000] flex-shrink-0" />
+                        <span>{prop.location}</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-gray-500 text-xs mb-4 flex-wrap" style={{ fontFamily: 'Poppins, sans-serif' }}>
                         <div className="flex items-center gap-1 bg-gray-50 px-2.5 py-1 rounded-lg">
-                          <Bed size={12} className="text-[#0273A7]" />
-                          <span className="font-medium">{prop.bedrooms} ch.</span>
+                          <Maximize size={12} className="text-[#0273A7]" />
+                          <span className="font-medium">{prop.surfaceLabel}</span>
                         </div>
-                      )}
-                      <div className="flex items-center gap-1 bg-gray-50 px-2.5 py-1 rounded-lg">
-                        <Bath size={12} className="text-[#0273A7]" />
-                        <span className="font-medium">{prop.bathrooms} sdb</span>
+                        {prop.bedrooms > 0 && (
+                          <div className="flex items-center gap-1 bg-gray-50 px-2.5 py-1 rounded-lg">
+                            <Bed size={12} className="text-[#0273A7]" />
+                            <span className="font-medium">{prop.bedrooms} ch.</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-1 bg-gray-50 px-2.5 py-1 rounded-lg">
+                          <Bath size={12} className="text-[#0273A7]" />
+                          <span className="font-medium">{prop.bathrooms} sdb</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                        <span className="text-[#D30000] font-bold text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>{prop.priceLabel}</span>
+                        <span className="inline-flex items-center gap-1.5 bg-gray-900 group-hover:bg-[#D30000] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors duration-200" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                          Voir détails <ArrowRight size={13} />
+                        </span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                      <span className="text-[#D30000] font-bold text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>{prop.priceLabel}</span>
-                      <span className="inline-flex items-center gap-1.5 bg-gray-900 group-hover:bg-[#D30000] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors duration-200" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        Voir détails <ArrowRight size={13} />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              ))
+            )}
           </motion.div>
         </div>
       </section>

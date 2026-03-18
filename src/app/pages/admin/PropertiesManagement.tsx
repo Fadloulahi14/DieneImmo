@@ -4,14 +4,15 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Search, Plus, Edit, Trash2, Eye, CheckCircle, MapPin,
 } from 'lucide-react';
-import { allProperties } from '../../data/properties';
+import { useProperties } from '../../../lib/useProperties';
+import { deleteProperty } from '../../../lib/api';
 import { AdminLayout } from '../../components/AdminLayout';
 
 export function PropertiesManagement() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<'Tous' | 'Vente' | 'Location'>('Tous');
-  const [properties, setProperties] = useState(allProperties);
+  const { properties, loading, setProperties } = useProperties();
 
   const filteredProperties = properties.filter((p) => {
     const matchSearch =
@@ -21,8 +22,9 @@ export function PropertiesManagement() {
     return matchSearch && matchType;
   });
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce bien ?')) {
+      await deleteProperty(id);
       setProperties(properties.filter((p) => p.id !== id));
     }
   };
