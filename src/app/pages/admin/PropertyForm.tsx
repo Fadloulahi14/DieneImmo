@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowLeft, Save, Image as ImageIcon, CheckSquare, Upload, X } from 'lucide-react';
 import { useProperty } from '../../../lib/useProperties';
-import { createProperty, updateProperty, categories, zones } from '../../../lib/api';
+import { createProperty, updateProperty, categories } from '../../../lib/api';
 import { uploadToImgBB } from '../../../lib/imgbb';
 import { AdminLayout } from '../../components/AdminLayout';
 
@@ -21,7 +21,7 @@ export function PropertyForm() {
     category: 'Appartement',
     price: 0,
     location: '',
-    zone: 'Almadies',
+    zone: '',
     surface: 0,
     bedrooms: 0,
     bathrooms: 1,
@@ -390,20 +390,18 @@ export function PropertyForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  Zone <span className="text-[#D30000]">*</span>
+                  Quartier / Zone <span className="text-[#D30000]">*</span>
                 </label>
-                <select
+                <input
+                  type="text"
                   name="zone"
                   value={formData.zone}
                   onChange={handleChange}
+                  placeholder="Ex: Almadies, Sacré-Cœur, Ngor, Yoff..."
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#D30000]/30 focus:border-[#D30000] bg-gray-50 text-sm"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                   required
-                >
-                  {zones.filter((z) => z !== 'Toutes').map((zone) => (
-                    <option key={zone} value={zone}>{zone}</option>
-                  ))}
-                </select>
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5" style={{ fontFamily: 'Poppins, sans-serif' }}>

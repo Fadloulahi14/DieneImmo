@@ -23,3 +23,30 @@ export interface Property {
   floor?: number;
   availableFrom?: string;
 }
+
+export type LeadStatus = 'nouveau' | 'en_cours' | 'traite' | 'rejete';
+
+export interface PropertyLead {
+  id: number;
+  name: string;
+  phone: string;
+  email?: string;
+  whatsapp?: string;
+  type: 'Vente' | 'Location';
+  category?: string;
+  location?: string;
+  zone?: string;
+  surface?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  parking?: number;
+  floor?: number;
+  priceExpectation?: number;
+  description?: string;
+  images: string[];
+  status: LeadStatus;
+  adminNotes?: string;
+  convertedPropertyId?: number;
+  createdAt: string;
+  updatedAt: string;
+}

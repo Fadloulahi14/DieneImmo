@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import type { Property } from './types';
+import type { Property, PropertyLead, LeadStatus } from './types';
 
 // Cache simple en mémoire
 interface CacheEntry<T> {
@@ -238,3 +238,93 @@ export function clearCache(): void {
 
 export const categories = ['Tous', 'Appartement', 'Villa', 'Maison', 'Studio', 'Bureau', 'Penthouse', 'Duplex'];
 export const zones = ['Toutes', 'Almadies', 'Plateau', 'Corniche', 'Fann', 'Mermoz', 'Liberté', 'Ouakam', 'Point E'];
+
+// ─── Property Leads ──────────────────────────────────────────────────────────
+
+function mapLead(row: any): PropertyLead {
+  return {
+    id: row.id,
+    name: row.name,
+    phone: row.phone,
+    email: row.email ?? undefined,
+    whatsapp: row.whatsapp ?? undefined,
+    type: row.type,
+    category: row.category ?? undefined,
+    location: row.location ?? undefined,
+    zone: row.zone ?? undefined,
+    surface: row.surface ?? undefined,
+    bedrooms: row.bedrooms ?? undefined,
+    bathrooms: row.bathrooms ?? undefined,
+    parking: row.parking ?? undefined,
+    floor: row.floor ?? undefined,
+    priceExpectation: row.price_expectation ? Number(row.price_expectation) : undefined,
+    description: row.description ?? undefined,
+    images: typeof row.images === 'string' ? JSON.parse(row.images) : (row.images || []),
+    status: row.status,
+    adminNotes: row.admin_notes ?? undefined,
+    convertedPropertyId: row.converted_property_id ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function createPropertyLead(lead: Omit<PropertyLead, 'id' | 'status' | 'createdAt' | 'updatedAt'>): Promise<PropertyLead> {
+  try {
+    const result = await database`
+      INSERT INTO property_leads (
+        name, phone, email, whatsapp,
+        type, category, location, zone,
+        surface, bedrooms, bathrooms, parking, floor,
+        price_expectation, description, images
+      ) VALUES (
+        ${lead.name}, ${lead.phone}, ${lead.email ?? null}, ${lead.whatsapp ?? null},
+        ${lead.type}, ${lead.category ?? null}, ${lead.location ?? null}, ${lead.zone ?? null},
+        ${lead.surface ?? null}, ${lead.bedrooms ?? null}, ${lead.bathrooms ?? null},
+        ${lead.parking ?? null}, ${lead.floor ?? null},
+        ${lead.priceExpectation ?? null}, ${lead.description ?? null},
+        ${JSON.stringify(lead.images)}
+      )
+      RETURNING *
+    `;
+    return mapLead(result[0]);
+  } catch (error) {
+    console.error('API Error createPropertyLead:', error);
+    throw new Error('Erreur envoi de la demande');
+  }
+}
+
+export async function getPropertyLeads(): Promise<PropertyLead[]> {
+  try {
+    const result = await database`SELECT * FROM property_leads ORDER BY created_at DESC`;
+    return result.map(mapLead);
+  } catch (error) {
+    console.error('API Error getPropertyLeads:', error);
+    throw new Error('Erreur chargement des demandes');
+  }
+}
+
+export async function updateLeadStatus(id: number, status: LeadStatus, adminNotes?: string): Promise<PropertyLead> {
+  try {
+    const result = await database`
+      UPDATE property_leads
+      SET status = ${status},
+          admin_notes = ${adminNotes ?? null},
+          updated_at = NOW()
+      WHERE id = ${id}
+      RETURNING *
+    `;
+    return mapLead(result[0]);
+  } catch (error) {
+    console.error('API Error updateLeadStatus:', error);
+    throw new Error('Erreur mise à jour du statut');
+  }
+}
+
+export async function deletePropertyLead(id: number): Promise<void> {
+  try {
+    await database`DELETE FROM property_leads WHERE id = ${id}`;
+  } catch (error) {
+    console.error('API Error deletePropertyLead:', error);
+    throw new Error('Erreur suppression de la demande');
+  }
+}

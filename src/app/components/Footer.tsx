@@ -141,7 +141,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <p className="text-gray-500 text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              developper par Fadloullahi:778012731
+              developper par Fadloullahi
             </p>
             <span className="text-gray-700">•</span>
             <Link

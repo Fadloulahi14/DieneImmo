@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
-import { Menu, X, Home } from 'lucide-react';
+import { Menu, X, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const navLinks = [
@@ -13,33 +13,15 @@ const navLinks = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  const isHome = location.pathname === '/';
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     setIsOpen(false);
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const navBg = scrolled || !isHome
-    ? 'bg-white shadow-lg'
-    : 'bg-transparent';
-
-  const textColor = scrolled || !isHome ? 'text-gray-800' : 'text-white';
-  const logoColor = scrolled || !isHome ? 'text-[#D30000]' : 'text-white';
-  const logoSubColor = scrolled || !isHome ? 'text-[#0273A7]' : 'text-white/90';
-
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
-    >
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18 py-3">
           {/* Logo */}
@@ -62,7 +44,7 @@ export function Navbar() {
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative group
                     ${isActive
                       ? 'text-[#D30000]'
-                      : `${textColor} hover:text-[#D30000]`
+                      : 'text-gray-800 hover:text-[#D30000]'
                     }`}
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
@@ -72,12 +54,20 @@ export function Navbar() {
                 </Link>
               );
             })}
+            <Link
+              to="/admin/login"
+              className="ml-2 flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-gray-500 hover:text-[#D30000] border border-gray-200 hover:border-[#D30000]/40 transition-all duration-200"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              <Lock size={13} />
+              Admin
+            </Link>
           </nav>
 
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`md:hidden p-2 rounded-lg transition-colors ${textColor} hover:bg-white/10`}
+            className="md:hidden p-2 rounded-lg transition-colors text-gray-800 hover:bg-gray-100"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

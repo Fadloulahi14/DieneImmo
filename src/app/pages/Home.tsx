@@ -115,19 +115,11 @@ export function Home() {
                 <ArrowRight size={18} />
               </Link>
               <Link
-                to="/services"
+                to="/vendre"
                 className="flex items-center gap-2 bg-white/15 backdrop-blur-sm hover:bg-white/25 border border-white/40 text-white px-7 py-3.5 rounded-lg font-semibold transition-all duration-200"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Demander un conseil
-              </Link>
-              <Link
-                to="/contact"
-                className="flex items-center gap-2 bg-[#0273A7] hover:bg-[#025e8a] text-white px-7 py-3.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                <Phone size={18} />
-                Nous contacter
+                Vendre mon bien
               </Link>
             </motion.div>
           </motion.div>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { Home, BarChart3, Building2, PlusCircle, LogOut, ExternalLink, Menu, X } from 'lucide-react';
+import { BarChart3, Building2, PlusCircle, LogOut, ExternalLink, Menu, X, Inbox } from 'lucide-react';
+import { getPropertyLeads } from '../../lib/api';
 
 const navItems = [
-  { icon: BarChart3, label: 'Tableau de bord', path: '/admin/dashboard' },
-  { icon: Building2, label: 'Biens immobiliers', path: '/admin/properties' },
-  { icon: PlusCircle, label: 'Ajouter un bien', path: '/admin/properties/new' },
+  { icon: BarChart3, label: 'Tableau de bord', path: '/admin/dashboard', badge: null },
+  { icon: Building2, label: 'Biens immobiliers', path: '/admin/properties', badge: null },
+  { icon: PlusCircle, label: 'Ajouter un bien', path: '/admin/properties/new', badge: null },
+  { icon: Inbox, label: 'Demandes de vente', path: '/admin/leads', badge: 'leads' },
 ];
 
 interface AdminLayoutProps {
@@ -19,14 +21,20 @@ interface AdminLayoutProps {
 export function AdminLayout({ children, title, subtitle, actions, headerExtra }: AdminLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [newLeads, setNewLeads] = useState(0);
 
   useEffect(() => {
     if (localStorage.getItem('adminAuth') !== 'true') {
       navigate('/admin/login');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    getPropertyLeads()
+      .then(leads => setNewLeads(leads.filter(l => l.status === 'nouveau').length))
+      .catch(() => {});
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('adminAuth');
@@ -35,7 +43,7 @@ export function AdminLayout({ children, title, subtitle, actions, headerExtra }:
 
   const isActive = (path: string) => {
     if (path === '/admin/properties') {
-      return location.pathname.startsWith('/admin/properties');
+      return location.pathname.startsWith('/admin/properties') && !location.pathname.startsWith('/admin/leads');
     }
     return location.pathname === path;
   };
@@ -93,6 +101,7 @@ export function AdminLayout({ children, title, subtitle, actions, headerExtra }:
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
+            const badgeCount = item.badge === 'leads' ? newLeads : 0;
             return (
               <button
                 key={item.path}
@@ -108,7 +117,12 @@ export function AdminLayout({ children, title, subtitle, actions, headerExtra }:
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 <Icon size={20} className={`flex-shrink-0 transition-transform ${!active && 'group-hover:scale-110'}`} />
-                <span className="text-sm font-medium truncate">{item.label}</span>
+                <span className="text-sm font-medium truncate flex-1 text-left">{item.label}</span>
+                {badgeCount > 0 && (
+                  <span className="flex-shrink-0 bg-[#D30000] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow">
+                    {badgeCount > 9 ? '9+' : badgeCount}
+                  </span>
+                )}
               </button>
             );
           })}
