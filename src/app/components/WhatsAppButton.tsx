@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 
 export function WhatsAppButton() {
-  const whatsappNumber = '221771234567'; // Remplacer par le vrai numéro WhatsApp
+  const whatsappNumber = '221787870581';
   const message = encodeURIComponent('Bonjour, je souhaite obtenir plus d\'informations sur vos biens immobiliers.');
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 

@@ -13,6 +13,7 @@ import { AdminDashboard } from './pages/admin/Dashboard';
 import { PropertiesManagement } from './pages/admin/PropertiesManagement';
 import { PropertyForm } from './pages/admin/PropertyForm';
 import { LeadsManagement } from './pages/admin/LeadsManagement';
+import { LoyersManagement } from './pages/admin/LoyersManagement';
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
       { path: 'properties/new', Component: PropertyForm },
       { path: 'properties/edit/:id', Component: PropertyForm },
       { path: 'leads', Component: LeadsManagement },
+      { path: 'loyers', Component: LoyersManagement },
     ],
   },
 ]);

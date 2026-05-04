@@ -42,7 +42,7 @@ export function Contact() {
     {
       icon: Phone,
       title: 'Téléphone',
-      lines: ['+221 XX XXX XX XX', '+221 XX XXX XX XX'],
+      lines: ['+221 78 787 05 81', '+221 77 803 42 73'],
       color: '#0273A7',
     },
     {
@@ -322,15 +322,16 @@ export function Contact() {
                   Contactez-nous directement
                 </h3>
                 <div className="space-y-4">
-                  <a href="tel:+221000000000" className="flex items-center gap-4 p-4 rounded-xl bg-[#D30000]/5 hover:bg-[#D30000]/10 transition-colors group">
-                    <div className="w-10 h-10 rounded-full bg-[#D30000]/15 flex items-center justify-center">
+                  <div className="flex items-center gap-4 p-4 rounded-xl bg-[#D30000]/5">
+                    <div className="w-10 h-10 rounded-full bg-[#D30000]/15 flex items-center justify-center flex-shrink-0">
                       <Phone size={18} className="text-[#D30000]" />
                     </div>
                     <div>
-                      <div className="text-xs text-gray-500 uppercase tracking-wider" style={{ fontFamily: 'Poppins, sans-serif' }}>Téléphone</div>
-                      <div className="text-gray-800 font-medium text-sm group-hover:text-[#D30000] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>+221 XX XXX XX XX</div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1" style={{ fontFamily: 'Poppins, sans-serif' }}>Téléphone</div>
+                      <a href="tel:+221787870581" className="block text-gray-800 font-medium text-sm hover:text-[#D30000] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>+221 78 787 05 81</a>
+                      <a href="tel:+221778034273" className="block text-gray-800 font-medium text-sm hover:text-[#D30000] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>+221 77 803 42 73</a>
                     </div>
-                  </a>
+                  </div>
                   <a href="mailto:contact@dieneimmo.sn" className="flex items-center gap-4 p-4 rounded-xl bg-[#0273A7]/5 hover:bg-[#0273A7]/10 transition-colors group">
                     <div className="w-10 h-10 rounded-full bg-[#0273A7]/15 flex items-center justify-center">
                       <Mail size={18} className="text-[#0273A7]" />

@@ -116,11 +116,16 @@ export function Footer() {
                   En face Canal 4, Dakar
                 </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone size={16} className="text-[#D30000] flex-shrink-0" />
-                <a href="tel:+221000000000" className="text-gray-400 hover:text-white text-sm transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  +221 XX XXX XX XX
-                </a>
+              <li className="flex items-start gap-3">
+                <Phone size={16} className="text-[#D30000] flex-shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <a href="tel:+221787870581" className="block text-gray-400 hover:text-white text-sm transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    +221 78 787 05 81
+                  </a>
+                  <a href="tel:+221778034273" className="block text-gray-400 hover:text-white text-sm transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    +221 77 803 42 73
+                  </a>
+                </div>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={16} className="text-[#D30000] flex-shrink-0" />

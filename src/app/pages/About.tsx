@@ -31,8 +31,14 @@ const values = [
 
 const team = [
   {
+    name: 'Ngagne Diene',
+    role: 'Directeur Général',
+    img: '/images/immo0.jpeg',
+    bio: 'Directeur Général de DIÈNE IMMOBILIER, il assure le développement et la gestion opérationnelle de l\'agence avec rigueur et professionnalisme.',
+  },
+  {
     name: 'Elhadji Diene',
-    role: 'Directeur Général et Fondateur',
+    role: 'Fondateur',
     img: manImg,
     bio: 'Fondateur de DIÈNE IMMOBILIER, courtier chevronné reconnu dans le milieu immobilier sénégalais avec plus de 10 ans d\'expérience.',
   },
@@ -79,7 +85,7 @@ export function About() {
       </section>
 
       {/* Histoire */}
-      <section className="py-24 bg-white">
+      <section className="pt-24 pb-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -153,12 +159,34 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              <div className="rounded-2xl overflow-hidden shadow-2xl">
-                <ImageWithFallback
-                  src={officeImg}
-                  alt="Bureau Diene Immo"
-                  className="w-full h-[500px] object-cover"
-                />
+              <div className="relative">
+                {/* Photo bureau principale */}
+                <div className="rounded-2xl overflow-hidden shadow-2xl">
+                  <ImageWithFallback
+                    src={officeImg}
+                    alt="Bureau Diene Immo"
+                    className="w-full h-[500px] object-cover"
+                  />
+                </div>
+
+                {/* Portrait Ngagne Diene superposé */}
+                <div className="absolute -bottom-8 -left-8 w-44 h-52 rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+                  <ImageWithFallback
+                    src="/images/immo0.jpeg"
+                    alt="Ngagne Diene — Directeur Général"
+                    className="w-full h-full object-cover object-top"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900/90 to-transparent px-3 py-2">
+                    <p className="text-white text-xs font-bold leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>Ngagne Diene</p>
+                    <p className="text-[#D30000] text-[10px] font-medium" style={{ fontFamily: 'Poppins, sans-serif' }}>Directeur Général</p>
+                  </div>
+                </div>
+
+                {/* Badge "Depuis 2010" */}
+                <div className="absolute -top-5 -right-5 w-24 h-24 rounded-full bg-[#D30000] flex flex-col items-center justify-center shadow-xl">
+                  <span className="text-white text-xs font-medium" style={{ fontFamily: 'Poppins, sans-serif' }}>Depuis</span>
+                  <span className="text-white text-xl font-bold leading-none" style={{ fontFamily: 'Poppins, sans-serif' }}>2010</span>
+                </div>
               </div>
             </motion.div>
           </div>

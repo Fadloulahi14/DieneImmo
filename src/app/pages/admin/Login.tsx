@@ -128,9 +128,6 @@ export function AdminLogin() {
             <p className="text-xs text-gray-500 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
               Accès réservé au personnel autorisé uniquement
             </p>
-            <p className="text-xs text-gray-400 text-center mt-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Demo : admin / dieneimmo2024
-            </p>
           </div>
         </div>
       </motion.div>
