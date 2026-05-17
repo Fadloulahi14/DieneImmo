@@ -328,3 +328,83 @@ export async function deletePropertyLead(id: number): Promise<void> {
     throw new Error('Erreur suppression de la demande');
   }
 }
+
+// ─── Investor RDV ─────────────────────────────────────────────────────────────
+
+export type InvestorStatut = 'nouvelle' | 'en_cours' | 'traitee';
+
+export interface InvestorRdv {
+  id: number;
+  nom: string;
+  telephone: string;
+  email: string;
+  budget: string;
+  package: string;
+  message?: string;
+  statut: InvestorStatut;
+  createdAt: string;
+}
+
+function mapInvestorRdv(row: any): InvestorRdv {
+  return {
+    id: row.id,
+    nom: row.nom,
+    telephone: row.telephone,
+    email: row.email,
+    budget: row.budget,
+    package: row.package,
+    message: row.message ?? undefined,
+    statut: row.statut,
+    createdAt: row.created_at,
+  };
+}
+
+export async function createInvestorRdv(
+  rdv: Omit<InvestorRdv, 'id' | 'statut' | 'createdAt'>
+): Promise<InvestorRdv> {
+  try {
+    const result = await database`
+      INSERT INTO investor_rdv (nom, telephone, email, budget, package, message)
+      VALUES (${rdv.nom}, ${rdv.telephone}, ${rdv.email}, ${rdv.budget}, ${rdv.package}, ${rdv.message ?? null})
+      RETURNING *
+    `;
+    return mapInvestorRdv(result[0]);
+  } catch (error) {
+    console.error('API Error createInvestorRdv:', error);
+    throw new Error('Erreur envoi de la demande de rendez-vous');
+  }
+}
+
+export async function getInvestorRdvs(): Promise<InvestorRdv[]> {
+  try {
+    const result = await database`SELECT * FROM investor_rdv ORDER BY created_at DESC`;
+    return result.map(mapInvestorRdv);
+  } catch (error) {
+    console.error('API Error getInvestorRdvs:', error);
+    throw new Error('Erreur chargement des demandes investisseurs');
+  }
+}
+
+export async function updateInvestorRdvStatut(
+  id: number,
+  statut: InvestorStatut
+): Promise<InvestorRdv> {
+  try {
+    const result = await database`
+      UPDATE investor_rdv SET statut = ${statut} WHERE id = ${id} RETURNING *
+    `;
+    return mapInvestorRdv(result[0]);
+  } catch (error) {
+    console.error('API Error updateInvestorRdvStatut:', error);
+    throw new Error('Erreur mise à jour du statut');
+  }
+}
+
+export async function deleteInvestorRdv(id: number): Promise<void> {
+  try {
+    await database`DELETE FROM investor_rdv WHERE id = ${id}`;
+  } catch (error) {
+    console.error('API Error deleteInvestorRdv:', error);
+    throw new Error('Erreur suppression de la demande');
+  }
+}

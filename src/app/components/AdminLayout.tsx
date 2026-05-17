@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { BarChart3, Building2, PlusCircle, LogOut, ExternalLink, Menu, X, Inbox, KeyRound } from 'lucide-react';
+import { BarChart3, Building2, PlusCircle, LogOut, ExternalLink, Menu, X, Inbox, KeyRound, TrendingUp } from 'lucide-react';
 import { getPropertyLeads } from '../../lib/api';
 
 const navItems = [
@@ -8,6 +8,7 @@ const navItems = [
   { icon: Building2,   label: 'Biens immobiliers',  path: '/admin/properties',     badge: null },
   { icon: PlusCircle,  label: 'Ajouter un bien',    path: '/admin/properties/new', badge: null },
   { icon: Inbox,       label: 'Demandes de vente',  path: '/admin/leads',          badge: 'leads' },
+  { icon: TrendingUp,  label: 'Investisseurs',       path: '/admin/investisseur',   badge: null },
   { icon: KeyRound,    label: 'Suivi Loyers',        path: '/admin/loyers',         badge: null },
 ];
 

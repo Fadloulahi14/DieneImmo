@@ -14,6 +14,8 @@ import { PropertiesManagement } from './pages/admin/PropertiesManagement';
 import { PropertyForm } from './pages/admin/PropertyForm';
 import { LeadsManagement } from './pages/admin/LeadsManagement';
 import { LoyersManagement } from './pages/admin/LoyersManagement';
+import { Investissement } from './pages/Investissement';
+import { InvestorLeads } from './pages/admin/InvestorLeads';
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +29,7 @@ export const router = createBrowserRouter([
       { path: 'a-propos', Component: About },
       { path: 'contact', Component: Contact },
       { path: 'vendre', Component: SellProperty },
+      { path: 'investissement', Component: Investissement },
       { path: '*', Component: NotFound },
     ],
   },
@@ -41,6 +44,7 @@ export const router = createBrowserRouter([
       { path: 'properties/edit/:id', Component: PropertyForm },
       { path: 'leads', Component: LeadsManagement },
       { path: 'loyers', Component: LoyersManagement },
+      { path: 'investisseur', Component: InvestorLeads },
     ],
   },
 ]);
