@@ -78,16 +78,29 @@ export interface BuildingSummary {
 
 // ─── Mappers ─────────────────────────────────────────────────────────────────
 
+// Neon HTTP driver may return DATE columns as JS Date objects — always convert to string
+function toDateStr(v: any): string | undefined {
+  if (!v) return undefined;
+  if (v instanceof Date) return v.toISOString().split('T')[0];
+  return String(v);
+}
+
+function toTsStr(v: any): string {
+  if (!v) return '';
+  if (v instanceof Date) return v.toISOString();
+  return String(v);
+}
+
 function mapBuilding(r: any): Building {
-  return { id: r.id, name: r.name, address: r.address, active: r.active, createdAt: r.created_at };
+  return { id: r.id, name: r.name, address: r.address, active: r.active, createdAt: toTsStr(r.created_at) };
 }
 
 function mapTenant(r: any): Tenant {
   return {
     id: r.id, buildingId: r.building_id, buildingName: r.building_name,
     name: r.name, unit: r.unit, baseRent: Number(r.base_rent),
-    status: r.status, phone: r.phone, startDate: r.start_date,
-    notes: r.notes, createdAt: r.created_at,
+    status: r.status, phone: r.phone, startDate: toDateStr(r.start_date),
+    notes: r.notes, createdAt: toTsStr(r.created_at),
   };
 }
 
@@ -100,24 +113,24 @@ function mapPayment(r: any): RentPayment {
     buildingId: r.building_id, buildingName: r.building_name,
     periodMonth: r.period_month, periodYear: r.period_year,
     loyerDu, arrieres, montantPaye: paye,
-    datePaiement: r.date_paiement,
+    datePaiement: toDateStr(r.date_paiement),
     modePaiement: r.mode_paiement,
     statut: r.statut,
     observations: r.observations,
     justificatifUrl: r.justificatif_url,
     solde: loyerDu + arrieres - paye,
-    createdAt: r.created_at, updatedAt: r.updated_at,
+    createdAt: toTsStr(r.created_at), updatedAt: toTsStr(r.updated_at),
   };
 }
 
 function mapExpense(r: any): Expense {
   return {
     id: r.id, buildingId: r.building_id, buildingName: r.building_name,
-    mois: r.mois, annee: r.annee, dateDepense: r.date_depense,
+    mois: r.mois, annee: r.annee, dateDepense: toDateStr(r.date_depense),
     designation: r.designation, categorie: r.categorie,
     prestataire: r.prestataire, montant: Number(r.montant),
     justificatifUrl: r.justificatif_url, observations: r.observations,
-    createdAt: r.created_at,
+    createdAt: toTsStr(r.created_at),
   };
 }
 
